@@ -23,6 +23,7 @@ go.work
 main
 
 .env
+!.env.example
 *.json
 
 .idea/
