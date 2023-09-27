@@ -18,7 +18,7 @@ func (svc DatabaseService) Id() string {
 	return DATABASE_SVC
 }
 
-func (svc *DatabaseServicke) Start() error {
+func (svc *DatabaseService) Start() error {
 	svc.dbSvc = svc.Service(db.SQLITE_SVC).(*db.SqliteService)
 
 	err := svc.dbSvc.Db().AutoMigrate(&btc_rune.Rune{})
