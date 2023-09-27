@@ -3,7 +3,7 @@ package services
 import (
 	"errors"
 	"fmt"
-	btc_rune "github.com/alphabatem/btc-rune"
+	btc_rune "github.com/alphabatem/btc_rune"
 	"github.com/babilu-online/common/context"
 	"github.com/btcsuite/btcd/wire"
 	"github.com/gin-contrib/cors"

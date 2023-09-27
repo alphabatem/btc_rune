@@ -3,7 +3,7 @@ package services
 import (
 	"bytes"
 	"encoding/binary"
-	btc_rune "github.com/alphabatem/btc-rune"
+	"github.com/alphabatem/btc_rune"
 	"github.com/babilu-online/common/context"
 	"github.com/btcsuite/btcd/btcec/v2"
 	"github.com/btcsuite/btcd/btcutil"

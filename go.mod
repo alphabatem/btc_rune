@@ -1,4 +1,4 @@
-module github.com/alphabatem/btc-rune
+module github.com/alphabatem/btc_rune
 
 go 1.20
 

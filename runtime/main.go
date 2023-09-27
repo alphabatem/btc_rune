@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/alphabatem/btc-rune/db"
-	"github.com/alphabatem/btc-rune/services"
+	"github.com/alphabatem/btc_rune/db"
+	"github.com/alphabatem/btc_rune/services"
 	"github.com/babilu-online/common/context"
 	"github.com/joho/godotenv"
 	"log"
