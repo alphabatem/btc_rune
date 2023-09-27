@@ -5,7 +5,7 @@ import (
 	"encoding/binary"
 	"errors"
 	"fmt"
-	btc_rune "github.com/alphabatem/btc_rune"
+	"github.com/alphabatem/btc_rune"
 	"github.com/babilu-online/common/context"
 	"github.com/btcsuite/btcd/chaincfg/chainhash"
 	"github.com/btcsuite/btcd/txscript"

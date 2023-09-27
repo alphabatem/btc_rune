@@ -1,8 +1,8 @@
 package services
 
 import (
-	btc_rune "github.com/alphabatem/btc-rune"
-	"github.com/alphabatem/btc-rune/db"
+	"github.com/alphabatem/btc_rune"
+	"github.com/alphabatem/btc_rune/db"
 	"github.com/babilu-online/common/context"
 )
 
@@ -18,7 +18,7 @@ func (svc DatabaseService) Id() string {
 	return DATABASE_SVC
 }
 
-func (svc *DatabaseService) Start() error {
+func (svc *DatabaseServicke) Start() error {
 	svc.dbSvc = svc.Service(db.SQLITE_SVC).(*db.SqliteService)
 
 	err := svc.dbSvc.Db().AutoMigrate(&btc_rune.Rune{})
