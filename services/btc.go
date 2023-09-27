@@ -109,9 +109,9 @@ func (svc *BTCService) CreateIssuanceTransaction(symbol string, decimals uint64)
 	// Encode SYMBOL and DECIMALS as Varints
 	symbolEncoded := []byte(symbol)
 	for _, s := range symbolEncoded {
-		runeData.Write(svc.toVariant(uint64(s - 'A')))
+		runeData.Write(svc.toVarInt(uint64(s - 'A')))
 	}
-	runeData.Write(svc.toVariant(decimals))
+	runeData.Write(svc.toVarInt(decimals))
 
 	// Build OP_RETURN script
 	opReturnScript, err := txscript.NewScriptBuilder().AddOp(txscript.OP_RETURN).AddData(runeData.Bytes()).Script()
@@ -147,9 +147,9 @@ func (svc *BTCService) CreateTransferTransaction(assignments []*btc_rune.Assignm
 
 	// Encode assignments as Varints
 	for _, a := range assignments {
-		runeData.Write(svc.toVariant(a.ID))
-		runeData.Write(svc.toVariant(a.Output))
-		runeData.Write(svc.toVariant(a.Amount))
+		runeData.Write(svc.toVarInt(a.ID))
+		runeData.Write(svc.toVarInt(a.Output))
+		runeData.Write(svc.toVarInt(a.Amount))
 	}
 
 	// Build OP_RETURN script
@@ -208,27 +208,56 @@ func Send(tx *wire.MsgTx) error {
 }
 
 // Helper function to encode integers into Variants
-func (svc *BTCService) toVariant(value uint64) []byte {
+func (svc *BTCService) toVarInt(value uint64) []byte {
 	buf := make([]byte, binary.MaxVarintLen64)
 	n := binary.PutUvarint(buf, value)
 	return buf[:n]
 }
 
-func (svc *BTCService) DecodeVarint(buf *bytes.Buffer) uint64 {
+func (svc *BTCService) DecodeVarByte(buf *bytes.Buffer) []byte {
 	prefix, err := buf.ReadByte()
 	if err == io.EOF {
-		return 0
+		return []byte{}
 	}
 
 	if prefix < 1 {
-		return uint64(prefix)
+		next, err := buf.ReadByte()
+		if err == io.EOF {
+			return []byte{prefix}
+		}
+
+		return []byte{next}
+	}
+
+	//log.Println("PREFIX", prefix, buf.Len())
+
+	if buf.Len() == 0 {
+		return []byte{prefix}
+	}
+
+	if prefix == 254 {
+		prefix = 6
+	}
+
+	if prefix == 255 {
+		prefix = 8
 	}
 
 	by := make([]byte, prefix)
 	_, _ = buf.Read(by)
+	return by
+}
 
+func (svc *BTCService) DecodeVarInt(buf *bytes.Buffer) uint64 {
+	by := svc.DecodeVarByte(buf)
+	return svc.ByteToInt(by)
+}
+
+func (svc *BTCService) ByteToInt(by []byte) uint64 {
 	switch {
-	case len(by) <= 1:
+	case len(by) == 0:
+		return 0
+	case len(by) == 1:
 		return uint64(by[0])
 	case len(by) <= 2:
 		return uint64(binary.LittleEndian.Uint16(by))

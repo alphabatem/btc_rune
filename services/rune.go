@@ -162,7 +162,7 @@ func (svc *RuneService) DecodeTransaction(txHash *chainhash.Hash, runeData []byt
 	buffer := bytes.NewBuffer(runeData)
 
 	cmd, _ := binary.ReadUvarint(buffer)
-	dataType := svc.btc.DecodeVarint(buffer)
+	dataType := svc.btc.DecodeVarInt(buffer)
 
 	if cmd != txscript.OP_RETURN && dataType != 82 {
 		return nil //Not an OP_RETURN
@@ -193,10 +193,11 @@ func (svc *RuneService) decodeIssuance(data []byte) *btc_rune.Rune {
 	log.Println("Issuance", data)
 	buffer := bytes.NewBuffer(data)
 
-	symSize, _ := buffer.ReadByte()
-	symbol := make([]byte, symSize)
-	_, _ = buffer.Read(symbol)
-	decimals := svc.btc.DecodeVarint(buffer)
+	symbol := svc.btc.DecodeVarByte(buffer)
+	//log.Println("BYT", symbol)
+
+	decimals := svc.btc.DecodeVarInt(buffer)
+	//log.Println("decimals", decimals)
 
 	return &btc_rune.Rune{
 		Symbol:   svc.IntToBase26(symbol),
@@ -210,9 +211,9 @@ func (svc *RuneService) decodeTransfer(data []byte) []*btc_rune.Assignment {
 
 	for buffer.Len() >= 9 {
 		assignments = append(assignments, &btc_rune.Assignment{
-			ID:     svc.btc.DecodeVarint(buffer),
-			Output: svc.btc.DecodeVarint(buffer),
-			Amount: svc.btc.DecodeVarint(buffer),
+			ID:     svc.btc.DecodeVarInt(buffer),
+			Output: svc.btc.DecodeVarInt(buffer),
+			Amount: svc.btc.DecodeVarInt(buffer),
 		})
 	}
 
@@ -248,6 +249,11 @@ func (svc *RuneService) IntToBase26(txt []byte) string {
 		return ""
 	}
 
+	if len(sym)%2 != 0 {
+		log.Println("IntToBase26 - Invalid Char Amount", sym, txt)
+		return ""
+	}
+	log.Println("IntToBase26", sym, txt)
 	var text strings.Builder
 	for i := 0; i < len(sym); i += 2 {
 		n, _ := strconv.Atoi(sym[i : i+2])
@@ -258,19 +264,4 @@ func (svc *RuneService) IntToBase26(txt []byte) string {
 		text.WriteByte(base26Chars[n])
 	}
 	return text.String()
-}
-
-func (svc *RuneService) ToBase26(bytes []byte) string {
-	bytesNum := new(big.Int).SetBytes(bytes)
-	base26Str := ""
-	base26Chars := "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-
-	for bytesNum.Cmp(big.NewInt(0)) > 0 {
-		remainder := new(big.Int)
-		remainder.Mod(bytesNum, big.NewInt(26))
-		bytesNum.Div(bytesNum, big.NewInt(26))
-		base26Str = string(base26Chars[remainder.Int64()]) + base26Str
-	}
-
-	return base26Str
 }
