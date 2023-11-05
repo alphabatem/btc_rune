@@ -2,7 +2,8 @@ package services
 
 import (
 	"encoding/json"
-	"github.com/babilu-online/common/context"
+	"github.com/cloakd/common/services"
+
 	"github.com/btcsuite/btcd/btcutil"
 	"github.com/btcsuite/btcd/chaincfg/chainhash"
 	"github.com/btcsuite/btcd/rpcclient"
@@ -13,7 +14,7 @@ import (
 )
 
 type ChainSyncService struct {
-	context.DefaultService
+	services.DefaultService
 
 	btc  *BTCService
 	rune *RuneService

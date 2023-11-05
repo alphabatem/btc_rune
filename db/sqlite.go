@@ -3,7 +3,9 @@ package db
 import (
 	"errors"
 	"fmt"
-	"github.com/babilu-online/common/context"
+
+	"github.com/cloakd/common/context"
+	"github.com/cloakd/common/services"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
@@ -12,7 +14,7 @@ import (
 )
 
 type SqliteService struct {
-	context.DefaultService
+	services.DefaultService
 	db *gorm.DB
 
 	username string

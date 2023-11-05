@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"encoding/binary"
 	"github.com/alphabatem/btc_rune"
-	"github.com/babilu-online/common/context"
+
 	"github.com/btcsuite/btcd/btcec/v2"
 	"github.com/btcsuite/btcd/btcutil"
 	"github.com/btcsuite/btcd/chaincfg"
@@ -13,12 +13,15 @@ import (
 	"github.com/btcsuite/btcd/txscript"
 	"github.com/btcsuite/btcd/wire"
 	"github.com/btcsuite/btcwallet/wallet"
+	"github.com/cloakd/common/services"
 	"io"
 	"os"
+
+	"strconv"
 )
 
 type BTCService struct {
-	context.DefaultService
+	services.DefaultService
 
 	httpClient *rpcclient.Client
 
@@ -34,11 +37,13 @@ func (svc BTCService) Id() string {
 func (svc *BTCService) Start() (err error) {
 	svc.latestBlocks = []*chainhash.Hash{}
 
+	disableTls, err := strconv.ParseBool(os.Getenv("RPC_DisableTLS"))
+
 	svc.httpClient, err = rpcclient.New(&rpcclient.ConnConfig{
-		User: os.Getenv("RPC_USER"),
-		Pass: os.Getenv("RPC_PASS"),
-		Host: os.Getenv("RPC_URL"),
-		//DisableTLS:   true,
+		User:         os.Getenv("RPC_USER"),
+		Pass:         os.Getenv("RPC_PASS"),
+		Host:         os.Getenv("RPC_URL"),
+		DisableTLS:   disableTls,
 		HTTPPostMode: true,
 	}, nil)
 	if err != nil {
