@@ -6,10 +6,10 @@ import (
 	"errors"
 	"fmt"
 	"github.com/alphabatem/btc_rune"
-	"github.com/babilu-online/common/context"
 	"github.com/btcsuite/btcd/chaincfg/chainhash"
 	"github.com/btcsuite/btcd/txscript"
 	"github.com/btcsuite/btcd/wire"
+	"github.com/cloakd/common/services"
 	"log"
 	"math/big"
 	"strconv"
@@ -17,7 +17,7 @@ import (
 )
 
 type RuneService struct {
-	context.DefaultService
+	services.DefaultService
 
 	btc *BTCService
 }

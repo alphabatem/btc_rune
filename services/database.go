@@ -3,11 +3,11 @@ package services
 import (
 	"github.com/alphabatem/btc_rune"
 	"github.com/alphabatem/btc_rune/db"
-	"github.com/babilu-online/common/context"
+	"github.com/cloakd/common/services"
 )
 
 type DatabaseService struct {
-	context.DefaultService
+	services.DefaultService
 
 	dbSvc *db.SqliteService
 }

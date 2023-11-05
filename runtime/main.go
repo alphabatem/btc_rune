@@ -1,11 +1,12 @@
 package main
 
 import (
+	"log"
+
 	"github.com/alphabatem/btc_rune/db"
 	"github.com/alphabatem/btc_rune/services"
-	"github.com/babilu-online/common/context"
+	"github.com/cloakd/common/context"
 	"github.com/joho/godotenv"
-	"log"
 )
 
 func main() {
@@ -15,7 +16,7 @@ func main() {
 		log.Fatal("Error loading .env file")
 	}
 
-	ctx, err := context.NewCtx(
+	ctx, err := context.NewContext(
 		&db.SqliteService{},
 		&services.DatabaseService{},
 		&services.BTCService{},

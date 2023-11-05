@@ -4,8 +4,9 @@ import (
 	"errors"
 	"fmt"
 	"github.com/alphabatem/btc_rune"
-	"github.com/babilu-online/common/context"
 	"github.com/btcsuite/btcd/wire"
+	"github.com/cloakd/common/context"
+	"github.com/cloakd/common/services"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"os"
@@ -14,7 +15,7 @@ import (
 )
 
 type HttpService struct {
-	context.DefaultService
+	services.DefaultService
 
 	BaseURL string
 	Port    int
